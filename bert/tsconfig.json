@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+     "strict": true,
+     "target": "esnext",
+     "module": "nodenext",
+     "esModuleInterop": true,
+     "moduleResolution" :"nodenext",
+     "sourceMap": true,
+     "rootDir": "src",
+     "outDir": "dist",
+     "noEmitOnError": true,
+     "typeRoots": [ "node_modules/@types" ],
+     "types" : [ "node"],
+     "lib": ["esnext", "dom"],
+     "skipLibCheck": true,
+  }
+}

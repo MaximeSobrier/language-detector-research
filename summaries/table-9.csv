@@ -1,0 +1,46 @@
+Table 9: Ablation study
+
+Precision
+Dataset,type,WiLI,FLORES+,Multilingual
+No differential weighting,Macro,98.19,98.41,100
+No differential weighting,Micro,97.8,97.39,100
+Differential weighting,Macro,97.85,98.45,100
+Differential weighting,Micro,97.78,97.47,100
+Differential weighting with English bias,Macro,98.18,98.44,100
+Differential weighting with English bias,Micro,98.05,97.47,100
+
+Recall
+Dataset,type,WiLI,FLORES+,Multilingual
+No differential weighting,Macro,97.79,97.55,100
+No differential weighting,Micro,97.8,97.25,100
+Differential weighting,Macro,98.1,97.63,100
+Differential weighting,Micro,97.78,97.33,100
+Differential weighting with English bias,Macro,98.12,97.63,100
+Differential weighting with English bias,Micro,98.05,97.32,100
+
+Accuracy
+Dataset,type,WiLI,FLORES+,Multilingual
+No differential weighting,Macro,99.96,99.95,100
+No differential weighting,Micro,99.96,99.95,100
+Differential weighting,Macro,99.96,99.96,100
+Differential weighting,Micro,99.96,99.95,100
+Differential weighting with English bias,Macro,99.96,99.96,100
+Differential weighting with English bias,Micro,99.96,99.95,100
+
+F1-Score
+Dataset,type,WiLI,FLORES+,Multilingual
+No differential weighting,Macro,97.93,97.77,100
+No differential weighting,Micro,97.8,97.32,100
+Differential weighting,Macro,97.93,97.87,100
+Differential weighting,Micro,97.78,97.4,100
+Differential weighting with English bias,Macro,98.11,97.87,100
+Differential weighting with English bias,Micro,98.05,97.4,100
+
+Specificity
+Dataset,type,WiLI,FLORES+,Multilingual
+No differential weighting,Macro,99.98,99.98,100
+No differential weighting,Micro,99.98,99.98,100
+Differential weighting,Macro,99.98,99.98,100
+Differential weighting,Micro,99.98,99.98,100
+Differential weighting with English bias,Macro,99.98,99.98,100
+Differential weighting with English bias,Micro,99.98,99.98,100

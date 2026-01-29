@@ -1,0 +1,15 @@
+node_modules
+package-lock.json
+*.tgz
+dist
+benchmarks
+src/languages.json
+bert/models/.venv
+bert/models/xlm-v-base-language-id
+bert/dist
+models/*.bin
+datasets/*.bin
+summaries/*.ods
+cld3/.venv
+summaries/.*
+bert/.cache/

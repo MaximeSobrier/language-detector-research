@@ -1,0 +1,31 @@
+Table 9.1: Ablation study
+
+Precision
+Dataset,bs,hr,Indonesian,Malay, English
+No differential weighting,63.22,59.48,77.66,98.43,95.73
+Differential weighting,65.17,60.27,88.96,97.57,99.28
+Differential weighting with English bias,65.36,60.26,88.94,97.7,96.88
+
+Recall
+Dataset,bs,hr,Indonesian,Malay, English
+No differential weighting,54.91,70.07,98.96,74.2,98.94
+Differential weighting,55.15,73.16,97.92,90.41,89.32
+Differential weighting with English bias,55.15,72.92,97.69,90.41,99.16
+
+Accuracy
+Dataset,bs,hr,Indonesian,Malay, English
+No differential weighting,99.15,99.14,99.67,99.7,99.81
+Differential weighting,99.18,99.17,99.84,99.87,99.61
+Differential weighting with English bias,99.18,99.17,99.84,99.87,99.86
+
+F1-Score
+Dataset,bs,hr,Indonesian,Malay, English
+No differential weighting,58.77,64.34,87.02,84.62,97.31
+Differential weighting,59.74,66.09,93.22,93.86,94.04
+Differential weighting with English bias,59.82,65.99,93.11,93.92,98.01
+
+Specificity
+Dataset,bs,hr,Indonesian,Malay, English
+No differential weighting,99.64,99.47,99.67,99.99,99.84
+Differential weighting,99.67,99.46,99.86,99.97,99.98
+Differential weighting with English bias,99.67,99.46,99.86,99.98,99.89
