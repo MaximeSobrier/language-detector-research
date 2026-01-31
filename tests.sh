@@ -85,6 +85,9 @@ for THRESHOLD in 0.6 0.7 0.8 0.9; do
   node dist/benchmark.js --model=ldw --benchmark=flores --multiple --output=results/ldw-flores-cc-20k-threshold-${THRESHOLD}.csv --threshold=${THRESHOLD}
 done
 
+# Confidence Intervals
+node dist/confidence.js
+
 # # Bert
 cd bert
 
