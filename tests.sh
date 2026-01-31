@@ -78,10 +78,11 @@ node dist/benchmark.js --model=ldw --benchmark=multilingual --output=results/ldw
 node dist/benchmark.js --model=ldw --benchmark=flores --output=results/ldw-flores-final-20k.csv
 node dist/benchmark.js --model=ldw --benchmark=wili --output=results/ldw-wili-final-20k.csv
 
-# Table 10
+# Table 10 - 11
 cp models/ldw-cc-20k.json ../language-detector/dist/languages.json
-for THRESHOLD in 0.6 0.7 0.9; do
+for THRESHOLD in 0.6 0.7 0.8 0.9; do
   node dist/benchmark.js --model=ldw --benchmark=multilingual --multiple --output=results/ldw-multilingual-cc-20k-threshold-${THRESHOLD}.csv --threshold=${THRESHOLD}
+  node dist/benchmark.js --model=ldw --benchmark=flores --multiple --output=results/ldw-flores-cc-20k-threshold-${THRESHOLD}.csv --threshold=${THRESHOLD}
 done
 
 # # Bert

@@ -322,7 +322,7 @@ async function processDataset(
     if (sample.labels && options.multiple) {
       const [lang1,lang2] = sample.labels;
       
-      const detectedLanguages = getLanguages(options.model, sample.text).slice(0, 2);
+      const detectedLanguages = getLanguages(options.model, sample.text);
       // console.log("Detected languages:", detectedLanguages);
 
       let all = [lang1, lang2].concat(detectedLanguages);
@@ -349,7 +349,9 @@ async function processDataset(
       continue;
     }
 
-    const detectedLanguage = await getLanguage(options.model, sample.text);
+    // const detectedLanguage = await getLanguage(options.model, sample.text);
+     const detectedLanguages = await getLanguages(options.model, sample.text);
+     const detectedLanguage = detectedLanguages[0];
 
     if (sample.labels && !options.multiple) {
       const [lang1,lang2] = sample.labels;
@@ -367,6 +369,27 @@ async function processDataset(
 
     if (detectedLanguage !== code && errorFs) {
       errorFs.write(`${sample.id || ''},${code},"${sample.text.replace(/"/g, '\'')}"\n`);
+    }
+
+    if (options.multiple) {
+      let all = [code].concat(detectedLanguages);
+      all = Array.from(new Set(all));
+
+      for(let language of supportedLanguages) {
+        // metrics
+        if (detectedLanguages.includes(language) && code == language) {
+          tp[language] = tp[language] + 1;
+        }
+        else if (detectedLanguages.includes(language) && code != language) {
+          fp[language] = fp[language] + 1;
+        }
+        else if (!detectedLanguages.includes(language) && code == language) {
+          fn[language] = fn[language] + 1;
+        }
+        else {
+          tn[language] = tn[language] + 1;  
+        }
+      }
     }
 
     for (let language of supportedLanguages) {

@@ -1,10 +1,18 @@
 import * as fs from 'fs';
 import * as readline from 'readline';
-import { text } from 'stream/consumers';
 var csvsync = require('csvsync');
+
+const commandLineArgs = require('command-line-args');
+const optionDefinitions = [
+  {name: 'table', type: String, defaultValue: ''},
+];
+
+const options = commandLineArgs(optionDefinitions);
 
 // Table 2
 (async () => {
+
+  if (!options.table || options.table === '2')
   {
     console.log("Table 2");
     const outputFs = fs.createWriteStream('summaries/table-2.csv', { flags: 'w' });
@@ -110,6 +118,7 @@ var csvsync = require('csvsync');
     outputFs.close();
   }
 
+  if (!options.table || options.table === '5')
   {
     // Compare all libraries
     let bertWili = await loadResults('results/bert-wili.csv');
@@ -154,18 +163,18 @@ var csvsync = require('csvsync');
     let ldwFasttextOpensubtitles = await loadResults('results/ldw-opensubtitles-fasttext-20k.csv');
   
 
-    console.log("Table 4");
-    const outputFs = fs.createWriteStream('summaries/table-4.csv', { flags: 'w' });
+    console.log("Table 5");
+    const outputFs = fs.createWriteStream('summaries/table-5.csv', { flags: 'w' });
 
-    console.log("Table 4: Precision");
-    outputFs.write(`Table 4: Performances of the different libraries\n\n`);
+    console.log("Table 5: Precision");
+    outputFs.write(`Table 5: Performances of the different libraries\n\n`);
     outputFs.write(`Precision\n`);
     outputFs.write(`Benchmark,Type,BERT,ldw20k BERT,CLD3,ldw10k CLD3,fastText,GlotLID,ldw20k fastText\n`);
     outputFs.write(`WiLI,Macro,${bertWili['Macro'].precision},${ldwBertWili['Macro'].precision},${cld3Wili['Macro'].precision},${ldwCld3Wili['Macro'].precision},${fasttextWili['Macro'].precision},${glotlidWili['Macro'].precision},${ldwFasttextWili['Macro'].precision}\n`);
     outputFs.write(`WiLI,Micro,${bertWili['Micro'].precision},${ldwBertWili['Micro'].precision},${cld3Wili['Micro'].precision},${ldwCld3Wili['Micro'].precision},${fasttextWili['Micro'].precision},${glotlidWili['Micro'].precision},${ldwFasttextWili['Micro'].precision}\n`);
     outputFs.write(`WiLI,95% CI`);
 
-    console.log("Table 4: Precision - WiLI 95% CI");
+    console.log("Table 5: Precision - WiLI 95% CI");
     let [low, high] = await confidenceInterval(bertWili, 'precision', `results/languages-bert-wili.txt`);
     outputFs.write(`,${low.toFixed(2)} - ${high.toFixed(2)}`);
 
@@ -188,7 +197,7 @@ var csvsync = require('csvsync');
     [low, high] = await confidenceInterval(ldwFasttextWili, 'precision', `results/languages-fasttext-wili.txt`);
     outputFs.write(`,${low.toFixed(2)} - ${high.toFixed(2)}\n`);
 
-    console.log("Table 4: Precision - WiLI McNemar");
+    console.log("Table 5: Precision - WiLI McNemar");
     let n01, n10, pValue, chi2;
     outputFs.write(`WiLI,McNemar`);
     ({ n01, n10, pValue, chi2 } = await mcNemarTest(Object.keys(bertWili), Object.keys(ldwBertWili), `results/bert-wili-errors.csv`, `results/ldw-wili-bert-20k-errors.csv`));
@@ -207,7 +216,7 @@ var csvsync = require('csvsync');
     outputFs.write(`FLORES+,Micro,${bertFlores['Micro'].precision},${ldwBertFlores['Micro'].precision},${cld3Flores['Micro'].precision},${ldwCld3Flores['Micro'].precision},${fasttextFlores['Micro'].precision},${glotlidFlores['Micro'].precision},${ldwFasttextFlores['Micro'].precision}\n`);
     outputFs.write(`FLORES+,95% CI`);
 
-    console.log("Table 4: Precision - FLORES+ 95% CI");
+    console.log("Table 5: Precision - FLORES+ 95% CI");
     [low, high] = await confidenceInterval(bertFlores, 'precision', `results/languages-bert-flores.txt`);
     outputFs.write(`,${low.toFixed(2)} -${high.toFixed(2)}`);
 
@@ -229,7 +238,7 @@ var csvsync = require('csvsync');
     [low, high] = await confidenceInterval(ldwFasttextFlores, 'precision', `results/languages-fasttext-flores.txt`);
     outputFs.write(`,${low.toFixed(2)} - ${high.toFixed(2)}\n`);
 
-    console.log("Table 4: Precision - FLORES+ McNemar");
+    console.log("Table 5: Precision - FLORES+ McNemar");
     outputFs.write(`FLORES+,McNemar`);
     ({ n01, n10, pValue, chi2 } = await mcNemarTest(Object.keys(bertFlores), Object.keys(ldwBertFlores), `results/bert-flores-errors.csv`, `results/ldw-flores-bert-20k-errors.csv`));
     outputFs.write(`,n01=${n01} n10=${n10} chi2=${chi2.toFixed(2)},`);
@@ -246,7 +255,7 @@ var csvsync = require('csvsync');
     outputFs.write(`Tatoeba,Macro,${bertTatoeba['Macro'].precision},${ldwBertTatoeba['Macro'].precision},${cld3Tatoeba['Macro'].precision},${ldwCld3Tatoeba['Macro'].precision},${fasttextTatoeba['Macro'].precision},${glotlidTatoeba['Macro'].precision},${ldwFasttextTatoeba['Macro'].precision}\n`);
     outputFs.write(`Tatoeba,Micro,${bertTatoeba['Micro'].precision},${ldwBertTatoeba['Micro'].precision},${cld3Tatoeba['Micro'].precision},${ldwCld3Tatoeba['Micro'].precision},${fasttextTatoeba['Micro'].precision},${glotlidTatoeba['Micro'].precision},${ldwFasttextTatoeba['Micro'].precision}\n`);
     outputFs.write(`Tatoeba,95% CI`);
-    console.log("Table 4: Precision - Tatoeba 95% CI");
+    console.log("Table 5: Precision - Tatoeba 95% CI");
 
     [low, high] = await confidenceInterval(bertTatoeba, 'precision', `results/languages-bert-tatoeba.txt`);
     outputFs.write(`,${low.toFixed(2)} -${high.toFixed(2)}`);
@@ -269,7 +278,7 @@ var csvsync = require('csvsync');
     [low, high] = await confidenceInterval(ldwFasttextTatoeba, 'precision', `results/languages-fasttext-tatoeba.txt`);
     outputFs.write(`,${low.toFixed(2)} - ${high.toFixed(2)}\n`);
 
-    console.log("Table 4: Precision - Tatoeba McNemar");
+    console.log("Table 5: Precision - Tatoeba McNemar");
     outputFs.write(`Tatoeba,McNemar`);
     ({ n01, n10, pValue, chi2 } = await mcNemarTest(Object.keys(bertTatoeba), Object.keys(ldwBertTatoeba), `results/bert-tatoeba-errors.csv`, `results/ldw-tatoeba-bert-20k-errors.csv`));
     outputFs.write(`,n01=${n01} n10=${n10} chi2=${chi2.toFixed(2)},`);
@@ -287,7 +296,7 @@ var csvsync = require('csvsync');
     outputFs.write(`OpenSubtitles,Macro,${bertOpensubtitles['Macro'].precision},${ldwBertOpensubtitles['Macro'].precision},${cld3Opensubtitles['Macro'].precision},${ldwCld3Opensubtitles['Macro'].precision},${fasttextOpensubtitles['Macro'].precision},${glotlidOpensubtitles['Macro'].precision},${ldwFasttextOpensubtitles['Macro'].precision}\n`);
     outputFs.write(`OpenSubtitles,Micro,${bertOpensubtitles['Micro'].precision},${ldwBertOpensubtitles['Micro'].precision},${cld3Opensubtitles['Micro'].precision},${ldwCld3Opensubtitles['Micro'].precision},${fasttextOpensubtitles['Micro'].precision},${glotlidOpensubtitles['Micro'].precision},${ldwFasttextOpensubtitles['Micro'].precision}\n`);
     outputFs.write(`OpenSubtitles,95% CI`);
-    console.log("Table 4: Precision - OpenSubtitles 95% CI");
+    console.log("Table 5: Precision - OpenSubtitles 95% CI");
 
     [low, high] = await confidenceInterval(bertOpensubtitles, 'precision', `results/languages-fasttext-opensubtitles.txt`);
     outputFs.write(`,${low.toFixed(2)} - ${high.toFixed(2)}`);
@@ -310,7 +319,7 @@ var csvsync = require('csvsync');
     [low, high] = await confidenceInterval(ldwFasttextOpensubtitles, 'precision', `results/languages-fasttext-opensubtitles.txt`);
     outputFs.write(`,${low.toFixed(2)} - ${high.toFixed(2)}\n`);
 
-    console.log("Table 4: Precision - OpenSubtitles McNemar");
+    console.log("Table 5: Precision - OpenSubtitles McNemar");
     outputFs.write(`OpenSubtitles,McNemar`);
     ({ n01, n10, pValue, chi2 } = await mcNemarTest(Object.keys(bertOpensubtitles), Object.keys(ldwBertOpensubtitles), `results/bert-opensubtitles-errors.csv`, `results/ldw-opensubtitles-bert-20k-errors.csv`));
     outputFs.write(`,n01=${n01} n10=${n10} chi2=${chi2.toFixed(2)},`);
@@ -324,7 +333,7 @@ var csvsync = require('csvsync');
     ({ n01, n10, pValue, chi2 } = await mcNemarTest(Object.keys(glotlidOpensubtitles), Object.keys(ldwFasttextOpensubtitles), `results/glotlid-opensubtitles-errors.csv`, `results/ldw-opensubtitles-fasttext-20k-errors.csv`));
     outputFs.write(`,n01=${n01} n10=${n10} chi2=${chi2.toFixed(2)},\n`);
 
-    console.log("Table 4: Recall");
+    console.log("Table 5: Recall");
     outputFs.write(`\nRecall\n`);
     outputFs.write(`Benchmark,Type,BERT,ldw20k BERT,CLD3,ldw10k CLD3,fastText,GlotLID,ldw20k fastText\n`);
     outputFs.write(`WiLI,Macro,${bertWili['Macro'].recall},${ldwBertWili['Macro'].recall},${cld3Wili['Macro'].recall},${ldwCld3Wili['Macro'].recall},${fasttextWili['Macro'].recall},${glotlidWili['Macro'].recall},${ldwFasttextWili['Macro'].recall}\n`);
@@ -532,7 +541,7 @@ var csvsync = require('csvsync');
     [low, high] = await confidenceInterval(ldwFasttextOpensubtitles, 'accuracy', `results/languages-fasttext-opensubtitles.txt`);
     outputFs.write(`,${low.toFixed(2)} - ${high.toFixed(2)}\n`);
 
-    console.log("Table 4: F1-Score");
+    console.log("Table 5: F1-Score");
     outputFs.write(`\nF1-Score\n`);
     outputFs.write(`Benchmark,Type,BERT,ldw20k BERT,CLD3,ldw10k CLD3,fastText,GlotLID,ldw20k fastText\n`);
     outputFs.write(`WiLI,Macro,${bertWili['Macro'].f1},${ldwBertWili['Macro'].f1},${cld3Wili['Macro'].f1},${ldwCld3Wili['Macro'].f1},${fasttextWili['Macro'].f1},${glotlidWili['Macro'].f1},${ldwFasttextWili['Macro'].f1}\n`);
@@ -635,7 +644,7 @@ var csvsync = require('csvsync');
     [low, high] = await confidenceInterval(ldwFasttextOpensubtitles, 'f1', `results/languages-fasttext-opensubtitles.txt`);
     outputFs.write(`,${low.toFixed(2)} - ${high.toFixed(2)}\n`);
 
-    console.log("Table 4: Specificity");
+    console.log("Table 5: Specificity");
     outputFs.write(`\nSpecificity\n`);
     outputFs.write(`Benchmark,Type,BERT,ldw20k BERT,CLD3,ldw10k CLD3,fastText,GlotLID,ldw20k fastText\n`);
     outputFs.write(`WiLI,Macro,${bertWili['Macro'].specificity},${ldwBertWili['Macro'].specificity},${cld3Wili['Macro'].specificity},${ldwCld3Wili['Macro'].specificity},${fasttextWili['Macro'].specificity},${glotlidWili['Macro'].specificity},${ldwFasttextWili['Macro'].specificity}\n`);
@@ -742,10 +751,12 @@ var csvsync = require('csvsync');
 
     outputFs.close();
   }
+
+  if (!options.table || options.table === '12')
   {
-    // Table 9 - Ablation study
-    console.log("Table 9");
-    let outputFs = fs.createWriteStream('summaries/table-9.csv', { flags: 'w' });
+    // Table 12 - Ablation study
+    console.log("Table 12: Ablation study");
+    let outputFs = fs.createWriteStream('summaries/table-12.csv', { flags: 'w' });
 
     
     let ldwWili20k = await loadResults('results/ldw-wili-final-20k.csv');
@@ -760,7 +771,7 @@ var csvsync = require('csvsync');
     let ldwMultilingual20kNoDifferential = await loadResults('results/ldw-multilingual-no-differential-20k.csv');
     let ldwMultilingual20kNoEnglish = await loadResults('results/ldw-multilingual-no-english-20k.csv');
 
-    outputFs.write(`Table 9: Ablation study\n\n`);
+    outputFs.write(`Table 12: Ablation study\n\n`);
     outputFs.write(`Precision\n`);
     outputFs.write(`Dataset,type,WiLI,FLORES+,Multilingual\n`);
     outputFs.write(`No differential weighting,Macro,${ldwWili20kNoDifferential['Macro'].precision},${ldwFlores20kNoDifferential['Macro'].precision},${ldwMultilingual20kNoDifferential['Macro'].precision}\n`);
@@ -823,40 +834,124 @@ var csvsync = require('csvsync');
     outputFs.close();
 
 
-    // Table 9.1 - Ablation study - languages
-    console.log("Table 9.1");
-    outputFs = fs.createWriteStream('summaries/table-9-1.csv', { flags: 'w' });
+    // Table 13 - Ablation study - languages
+    console.log("Table 13");
+    outputFs = fs.createWriteStream('summaries/table-13.csv', { flags: 'w' });
 
-    outputFs.write(`Table 9.1: Ablation study\n\n`);
+    outputFs.write(`Table 13: Ablation study\n\n`);
     outputFs.write(`Precision\n`);
-    outputFs.write(`Dataset,bs,hr,Indonesian,Malay, English\n`);
+    outputFs.write(`Dataset,Bosnian,Croatian,Indonesian,Malay,English\n`);
     outputFs.write(`No differential weighting,${ldwWili20kNoDifferential['bs'].precision},${ldwWili20kNoDifferential['hr'].precision},${ldwWili20kNoDifferential['id'].precision},${ldwWili20kNoDifferential['ms'].precision},${ldwWili20kNoDifferential['en'].precision}\n`);
     outputFs.write(`Differential weighting,${ldwWili20kNoEnglish['bs'].precision},${ldwWili20kNoEnglish['hr'].precision},${ldwWili20kNoEnglish['id'].precision},${ldwWili20kNoEnglish['ms'].precision},${ldwWili20kNoEnglish['en'].precision}\n`);
     outputFs.write(`Differential weighting with English bias,${ldwWili20k['bs'].precision},${ldwWili20k['hr'].precision},${ldwWili20k['id'].precision},${ldwWili20k['ms'].precision},${ldwWili20k['en'].precision}\n`);
 
     outputFs.write(`\nRecall\n`);
-    outputFs.write(`Dataset,bs,hr,Indonesian,Malay, English\n`);
+    outputFs.write(`Dataset,Bosnian,Croatian,Indonesian,Malay,English\n`);
     outputFs.write(`No differential weighting,${ldwWili20kNoDifferential['bs'].recall},${ldwWili20kNoDifferential['hr'].recall},${ldwWili20kNoDifferential['id'].recall},${ldwWili20kNoDifferential['ms'].recall},${ldwWili20kNoDifferential['en'].recall}\n`);
     outputFs.write(`Differential weighting,${ldwWili20kNoEnglish['bs'].recall},${ldwWili20kNoEnglish['hr'].recall},${ldwWili20kNoEnglish['id'].recall},${ldwWili20kNoEnglish['ms'].recall},${ldwWili20kNoEnglish['en'].recall}\n`);
     outputFs.write(`Differential weighting with English bias,${ldwWili20k['bs'].recall},${ldwWili20k['hr'].recall},${ldwWili20k['id'].recall},${ldwWili20k['ms'].recall},${ldwWili20k['en'].recall}\n`);
 
     outputFs.write(`\nAccuracy\n`);
-    outputFs.write(`Dataset,bs,hr,Indonesian,Malay, English\n`);
+    outputFs.write(`Dataset,Bosnian,Croatian,Indonesian,Malay,English\n`);
     outputFs.write(`No differential weighting,${ldwWili20kNoDifferential['bs'].accuracy},${ldwWili20kNoDifferential['hr'].accuracy},${ldwWili20kNoDifferential['id'].accuracy},${ldwWili20kNoDifferential['ms'].accuracy},${ldwWili20kNoDifferential['en'].accuracy}\n`);
     outputFs.write(`Differential weighting,${ldwWili20kNoEnglish['bs'].accuracy},${ldwWili20kNoEnglish['hr'].accuracy},${ldwWili20kNoEnglish['id'].accuracy},${ldwWili20kNoEnglish['ms'].accuracy},${ldwWili20kNoEnglish['en'].accuracy}\n`);
     outputFs.write(`Differential weighting with English bias,${ldwWili20k['bs'].accuracy},${ldwWili20k['hr'].accuracy},${ldwWili20k['id'].accuracy},${ldwWili20k['ms'].accuracy},${ldwWili20k['en'].accuracy}\n`);
 
     outputFs.write(`\nF1-Score\n`);
-    outputFs.write(`Dataset,bs,hr,Indonesian,Malay, English\n`);
+    outputFs.write(`Dataset,Bosnian,Croatian,Indonesian,Malay,English\n`);
     outputFs.write(`No differential weighting,${ldwWili20kNoDifferential['bs'].f1},${ldwWili20kNoDifferential['hr'].f1},${ldwWili20kNoDifferential['id'].f1},${ldwWili20kNoDifferential['ms'].f1},${ldwWili20kNoDifferential['en'].f1}\n`);
     outputFs.write(`Differential weighting,${ldwWili20kNoEnglish['bs'].f1},${ldwWili20kNoEnglish['hr'].f1},${ldwWili20kNoEnglish['id'].f1},${ldwWili20kNoEnglish['ms'].f1},${ldwWili20kNoEnglish['en'].f1}\n`);
     outputFs.write(`Differential weighting with English bias,${ldwWili20k['bs'].f1},${ldwWili20k['hr'].f1},${ldwWili20k['id'].f1},${ldwWili20k['ms'].f1},${ldwWili20k['en'].f1}\n`);
 
     outputFs.write(`\nSpecificity\n`);
-    outputFs.write(`Dataset,bs,hr,Indonesian,Malay, English\n`);
+    outputFs.write(`Dataset,Bosnian,Croatian,Indonesian,Malay,English\n`);
     outputFs.write(`No differential weighting,${ldwWili20kNoDifferential['bs'].specificity},${ldwWili20kNoDifferential['hr'].specificity},${ldwWili20kNoDifferential['id'].specificity},${ldwWili20kNoDifferential['ms'].specificity},${ldwWili20kNoDifferential['en'].specificity}\n`);
     outputFs.write(`Differential weighting,${ldwWili20kNoEnglish['bs'].specificity},${ldwWili20kNoEnglish['hr'].specificity},${ldwWili20kNoEnglish['id'].specificity},${ldwWili20kNoEnglish['ms'].specificity},${ldwWili20kNoEnglish['en'].specificity}\n`);
     outputFs.write(`Differential weighting with English bias,${ldwWili20k['bs'].specificity},${ldwWili20k['hr'].specificity},${ldwWili20k['id'].specificity},${ldwWili20k['ms'].specificity},${ldwWili20k['en'].specificity}\n`);
+
+    outputFs.close();
+  }
+
+  if (!options.table || options.table === '10')
+  {
+    // Table 10 - Multiple languages
+    console.log("Table 10 - Multiple languages");
+
+    let ldw1k = await loadResults('results/ldw-multilingual-1k.csv');
+    let ldw2k = await loadResults('results/ldw-multilingual-2k.csv');
+    let ldw5k = await loadResults('results/ldw-multilingual-5k.csv');
+    let ldw10k = await loadResults('results/ldw-multilingual-10k.csv');
+    let ldw20k = await loadResults('results/ldw-multilingual-20k.csv');
+    let outputFs = fs.createWriteStream('summaries/table-10.csv', { flags: 'w' });
+
+    outputFs.write(`Multilingual Webpages dataset\n`);
+    outputFs.write(`Dataset,Type,Precision,Recall,Accuracy,F1,Specificity\n`);
+
+    outputFs.write(`1k,Macro,${ldw1k['Macro'].precision},${ldw1k['Macro'].recall},${ldw1k['Macro'].accuracy},${ldw1k['Macro'].f1},${ldw1k['Macro'].specificity}\n`);
+    outputFs.write(`1k,Micro,${ldw1k['Micro'].precision},${ldw1k['Micro'].recall},${ldw1k['Micro'].accuracy},${ldw1k['Micro'].f1},${ldw1k['Micro'].specificity}\n`);
+
+    outputFs.write(`2k,Macro,${ldw2k['Macro'].precision},${ldw2k['Macro'].recall},${ldw2k['Macro'].accuracy},${ldw2k['Macro'].f1},${ldw2k['Macro'].specificity}\n`);
+    outputFs.write(`2k,Micro,${ldw2k['Micro'].precision},${ldw2k['Micro'].recall},${ldw2k['Micro'].accuracy},${ldw2k['Micro'].f1},${ldw2k['Micro'].specificity}\n`);
+
+    outputFs.write(`5k,Macro,${ldw5k['Macro'].precision},${ldw5k['Macro'].recall},${ldw5k['Macro'].accuracy},${ldw5k['Macro'].f1},${ldw5k['Macro'].specificity}\n`);
+    outputFs.write(`5k,Micro,${ldw5k['Micro'].precision},${ldw5k['Micro'].recall},${ldw5k['Micro'].accuracy},${ldw5k['Micro'].f1},${ldw5k['Micro'].specificity}\n`);
+
+    outputFs.write(`10k,Macro,${ldw10k['Macro'].precision},${ldw10k['Macro'].recall},${ldw10k['Macro'].accuracy},${ldw10k['Macro'].f1},${ldw10k['Macro'].specificity}\n`);
+    outputFs.write(`10k,Micro,${ldw10k['Micro'].precision},${ldw10k['Micro'].recall},${ldw10k['Micro'].accuracy},${ldw10k['Micro'].f1},${ldw10k['Micro'].specificity}\n`);
+
+    outputFs.write(`20k,Macro,${ldw20k['Macro'].precision},${ldw20k['Macro'].recall},${ldw20k['Macro'].accuracy},${ldw20k['Macro'].f1},${ldw20k['Macro'].specificity}\n`);
+    outputFs.write(`20k,Micro,${ldw20k['Micro'].precision},${ldw20k['Micro'].recall},${ldw20k['Micro'].accuracy},${ldw20k['Micro'].f1},${ldw20k['Micro'].specificity}\n`);
+
+    outputFs.close();
+  }
+
+  if (!options.table || options.table === '11')
+  {
+    // Table 11 - Threshold for multiple languages
+    console.log("Table 11 - Threshold for multiple languages");
+
+    let ldwMultilingual20k0_6 = await loadResults('results/ldw-multilingual-cc-20k-threshold-0.6.csv');
+    let ldwMultilingual20k0_7 = await loadResults('results/ldw-multilingual-cc-20k-threshold-0.7.csv');
+    let ldwMultilingual20k0_8 = await loadResults('results/ldw-multilingual-cc-20k-threshold-0.8.csv');
+    let ldwMultilingual20k0_9 = await loadResults('results/ldw-multilingual-cc-20k-threshold-0.9.csv');
+
+    let outputFs = fs.createWriteStream('summaries/table-11.csv', { flags: 'w' });
+    
+    outputFs.write(`Multilingual Webpages dataset - Thresholds\n`);
+    outputFs.write(`Threshold,Type,Precision,Recall,Accuracy,F1,Specificity\n`);
+    outputFs.write(`0.6,Macro,${ldwMultilingual20k0_6['Macro'].precision},${ldwMultilingual20k0_6['Macro'].recall},${ldwMultilingual20k0_6['Macro'].accuracy},${ldwMultilingual20k0_6['Macro'].f1},${ldwMultilingual20k0_6['Macro'].specificity}\n`);
+    outputFs.write(`0.6,Micro,${ldwMultilingual20k0_6['Micro'].precision},${ldwMultilingual20k0_6['Micro'].recall},${ldwMultilingual20k0_6['Micro'].accuracy},${ldwMultilingual20k0_6['Micro'].f1},${ldwMultilingual20k0_6['Micro'].specificity}\n`);
+
+    outputFs.write(`0.7,Macro,${ldwMultilingual20k0_7['Macro'].precision},${ldwMultilingual20k0_7['Macro'].recall},${ldwMultilingual20k0_7['Macro'].accuracy},${ldwMultilingual20k0_7['Macro'].f1},${ldwMultilingual20k0_7['Macro'].specificity}\n`);
+    outputFs.write(`0.7,Micro,${ldwMultilingual20k0_7['Micro'].precision},${ldwMultilingual20k0_7['Micro'].recall},${ldwMultilingual20k0_7['Micro'].accuracy},${ldwMultilingual20k0_7['Micro'].f1},${ldwMultilingual20k0_7['Micro'].specificity}\n`);
+
+    outputFs.write(`0.8,Macro,${ldwMultilingual20k0_8['Macro'].precision},${ldwMultilingual20k0_8['Macro'].recall},${ldwMultilingual20k0_8['Macro'].accuracy},${ldwMultilingual20k0_8['Macro'].f1},${ldwMultilingual20k0_8['Macro'].specificity}\n`);
+    outputFs.write(`0.8,Micro,${ldwMultilingual20k0_8['Micro'].precision},${ldwMultilingual20k0_8['Micro'].recall},${ldwMultilingual20k0_8['Micro'].accuracy},${ldwMultilingual20k0_8['Micro'].f1},${ldwMultilingual20k0_8['Micro'].specificity}\n`);
+    
+    outputFs.write(`0.9,Macro,${ldwMultilingual20k0_9['Macro'].precision},${ldwMultilingual20k0_9['Macro'].recall},${ldwMultilingual20k0_9['Macro'].accuracy},${ldwMultilingual20k0_9['Macro'].f1},${ldwMultilingual20k0_9['Macro'].specificity}\n`);
+    outputFs.write(`0.9,Micro,${ldwMultilingual20k0_9['Micro'].precision},${ldwMultilingual20k0_9['Micro'].recall},${ldwMultilingual20k0_9['Micro'].accuracy},${ldwMultilingual20k0_9['Micro'].f1},${ldwMultilingual20k0_9['Micro'].specificity}\n`);
+
+
+    let ldwFlores20k0_6 = await loadResults('results/ldw-flores-cc-20k-threshold-0.6.csv');
+    let ldwFlores20k0_7 = await loadResults('results/ldw-flores-cc-20k-threshold-0.7.csv');
+    let ldwFlores20k0_8 = await loadResults('results/ldw-flores-cc-20k-threshold-0.8.csv');
+    let ldwFlores20k0_9 = await loadResults('results/ldw-flores-cc-20k-threshold-0.9.csv');
+
+    outputFs.write(`\nFLORES+ dataset - Thresholds\n`);
+    outputFs.write(`Threshold,Type,Precision,Recall,Accuracy,F1,Specificity\n`);
+    outputFs.write(`0.6,Macro,${ldwFlores20k0_6['Macro'].precision},${ldwFlores20k0_6['Macro'].recall},${ldwFlores20k0_6['Macro'].accuracy},${ldwFlores20k0_6['Macro'].f1},${ldwFlores20k0_6['Macro'].specificity}\n`);
+    outputFs.write(`0.6,Micro,${ldwFlores20k0_6['Micro'].precision},${ldwFlores20k0_6['Micro'].recall},${ldwFlores20k0_6['Micro'].accuracy},${ldwFlores20k0_6['Micro'].f1},${ldwFlores20k0_6['Micro'].specificity}\n`);
+
+    outputFs.write(`0.7,Macro,${ldwFlores20k0_7['Macro'].precision},${ldwFlores20k0_7['Macro'].recall},${ldwFlores20k0_7['Macro'].accuracy},${ldwFlores20k0_7['Macro'].f1},${ldwFlores20k0_7['Macro'].specificity}\n`);
+    outputFs.write(`0.7,Micro,${ldwFlores20k0_7['Micro'].precision},${ldwFlores20k0_7['Micro'].recall},${ldwFlores20k0_7['Micro'].accuracy},${ldwFlores20k0_7['Micro'].f1},${ldwFlores20k0_7['Micro'].specificity}\n`);
+
+    outputFs.write(`0.8,Macro,${ldwFlores20k0_8['Macro'].precision},${ldwFlores20k0_8['Macro'].recall},${ldwFlores20k0_8['Macro'].accuracy},${ldwFlores20k0_8['Macro'].f1},${ldwFlores20k0_8['Macro'].specificity}\n`);
+    outputFs.write(`0.8,Micro,${ldwFlores20k0_8['Micro'].precision},${ldwFlores20k0_8['Micro'].recall},${ldwFlores20k0_8['Micro'].accuracy},${ldwFlores20k0_8['Micro'].f1},${ldwFlores20k0_8['Micro'].specificity}\n`);
+
+    outputFs.write(`0.9,Macro,${ldwFlores20k0_9['Macro'].precision},${ldwFlores20k0_9['Macro'].recall},${ldwFlores20k0_9['Macro'].accuracy},${ldwFlores20k0_9['Macro'].f1},${ldwFlores20k0_9['Macro'].specificity}\n`);
+    outputFs.write(`0.9,Micro,${ldwFlores20k0_9['Micro'].precision},${ldwFlores20k0_9['Micro'].recall},${ldwFlores20k0_9['Micro'].accuracy},${ldwFlores20k0_9['Micro'].f1},${ldwFlores20k0_9['Micro'].specificity}\n`);
+
+
 
     outputFs.close();
   }

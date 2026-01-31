@@ -18,7 +18,7 @@ This repository contains all the scripts for benchmarking against language-web-d
 
 # Prerequisites
 
-In the same folder, clone this repository and languade-detector:
+In the same folder, clone this repository and language-detector:
 
 ```
 git clone https://github.com/MaximeSobrier/language-detector-research.git
@@ -39,6 +39,6 @@ Run ``setup.sh`` to download the public benchmarks (WiLI-2018-, FLORES+, Tatoeba
 
 # Tests
 
-Run ``tests.sh`` to run the benchmarks and generate the results in /results.
+Run ``tests.sh`` to run the benchmarks and generate the results in ``/results``.
 
 Then run ``node dist/summary.js`` to generate the summary tables.
